@@ -65,7 +65,7 @@
         const select = document.getElementById('assignSelect');
         select.innerHTML = '';
         data.forEach(e => {
-            const fullName = e.first_name + ' ' + e.last_name; 
+            const fullName = e.first_name + ' ' + e.last_name;  
             const option = document.createElement('option'); 
             option.value = e.id;
             option.innerHTML = fullName;
