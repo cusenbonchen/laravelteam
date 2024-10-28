@@ -26,13 +26,42 @@ document.addEventListener('DOMContentLoaded', function () {
     
     }
     loadDataProject();
-    const drowData = (data) =>{
+
+    const getDataUser = async () => {
+        try {
+            const response = await fetch('/api/getAllUser', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            return data.users;
+        } catch (error) {
+            console.error('Lỗi:', error);
+            return null; 
+        }
+    };
+
+
+    const drowData = async (data) =>{
+
+        const users = await getDataUser();
+        const assginArr = JSON.parse(data.assign)
+        const matchedUsers = users.filter(user => assginArr.includes(user.id));
+
         const projectDetailsDiv = document.getElementById('projectDetails');
         projectDetailsDiv.innerHTML = '';
         const content = `
             <a href="/editproject?id=${data.id}" id="editProjectBtn" class="btn btn-primary btn-sm">
                 Edit
             </a>
+            <p><strong>Assign:</strong><div id="assign"></div></p>
             <h3>Project Details</h3>
             <p><strong>Code:</strong> ${data.code}</p>
             <p><strong>Project Name:</strong> ${data.project_name}</p>
@@ -41,12 +70,15 @@ document.addEventListener('DOMContentLoaded', function () {
             <p><strong>Level:</strong> ${data.level}</p>
             <p><strong>Type:</strong> ${data.type}</p>
             <p><strong>Process:</strong> ${data.process}</p>
-            <p><strong>Assign:</strong> ${data.assign}</p>
-            
-            
         `;
 
         projectDetailsDiv.innerHTML = content;
+        const assignElement = document.getElementById('assign')
+        matchedUsers.forEach(e =>{
+            const html = `<span> ${e.first_name + e.last_name} </span>`;
+
+            assignElement.insertAdjacentHTML('beforeend', html);
+        })
     }
 })
 

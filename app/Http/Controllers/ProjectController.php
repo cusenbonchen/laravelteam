@@ -10,16 +10,37 @@ use App\Models\User;
 
 class ProjectController extends Controller
 { 
-    public function createProjecView(){ 
+    public function createProjectView(){ 
         return view("CreateProject"); 
     }
-    public function updateProject(Request $request){ 
+    public function updateProjectView(Request $request){ 
         $projectId = $request->id;
         $project = Project::findOrFail($projectId);
-        return view("UpdateProject",["project"=>$project]);  
+        return view("UpdateProjectView",["project"=>$project]);  
     }
     public function ProjectDetailView(){ 
         return view("ProjectDetail"); 
+    }
+
+    public function updateProject(Request $request){ 
+        try { 
+            $projectId = $request->id;
+           
+            $project = Project::findOrFail($projectId); 
+            $project->update([
+               "code" => $request -> code,
+                "project_name" => $request -> project_name,
+                "client" => $request -> client,
+                "level" => $request -> level,
+                "deadline" => $request -> deadline,
+                "assign" => $request -> assign,
+                "content" => $request -> content,
+            ]);
+            return redirect()->route('user.HomePage')->with('message', 'Update thành công !!!');
+        } catch (\Throwable $e) {
+            return view('404');
+        }
+      
     }
     public function projectDetail(Request $request){
         
@@ -38,6 +59,7 @@ class ProjectController extends Controller
                 "project_name" => $request -> project_name,
                 "client" => $request -> client,
                 "level" => $request -> level,
+                "deadline" => $request -> deadline,
                 "assign" => $request -> assign,
                 "content" => $request -> content
             ];
@@ -68,10 +90,10 @@ class ProjectController extends Controller
     public function updateProcess(Request $request){  
        try {
             $project = Project::findOrFail($request->id);
-
             $project->update([
-                $request->all()
+                "process" => $request->process
             ]);
+
             return response()->json([
                 'status' => 200,
                 'message' => 'Update Success !!!',

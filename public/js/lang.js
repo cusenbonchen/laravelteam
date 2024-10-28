@@ -119,14 +119,14 @@ const translations = {
       'code' : "Mã dự án",
       'projectName' : "Tên dự án",
       'client' : "Tên khách hàng",
-      'level' : "level",
+      'level' : "Level",
       'assignName' : "Người phụ trách",
       'content' : "Nội dung",
 
       'codePlaceholder' : "Nhập mã dự án",
       'projectNamePlaceholder' : "Nhập tên dự án",
       'clientPlaceholder' : "Nhập tên khách hàng",
-      'levelPlaceholder' : "level",
+      'levelPlaceholder' : "Level",
       'assignNamePlaceholder' : "Nhập người phụ trách",
       'contentPlaceholder' : "Nhập nội dung",
 

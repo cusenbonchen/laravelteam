@@ -13,6 +13,8 @@ const renderTaskDragAndDrop = (data) => {
     data[columnId].forEach((item) => { 
       const spanElement = document.createElement('span');
       spanElement.innerHTML = `<a href="/projectdetail?id=${item.id}"><i class="bi bi-eye"></i></a>`
+      const iElement = document.createElement('i');
+      iElement.innerHTML = `<br>DL : <b>${item.deadline}</b>`
       const draggedElement = document.createElement("div");
       draggedElement.className = "draggable";
       draggedElement.innerText = item.code;
@@ -21,6 +23,7 @@ const renderTaskDragAndDrop = (data) => {
       draggedElement.dataset.id = item.id;  
       draggedElement.draggable = true;
       draggedElement.appendChild(spanElement);
+      draggedElement.appendChild(iElement);
       draggedElement.ondragstart = (event) => drag(event, columnId, item); 
       columnElement.appendChild(draggedElement);
     });

@@ -16,6 +16,7 @@ class Project extends Model
         'level',
         'type',
         'process',
+        'deadline',
         'assign',
         'content',
     ]; 

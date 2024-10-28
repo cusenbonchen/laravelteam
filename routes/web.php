@@ -26,6 +26,10 @@ Route::post('/forgot', [AuthController::class, 'forgotPass'])->name('auth.forgot
 Route::get('/forgot', [AuthController::class, 'forgot'])->name('auth.forgot'); 
 
 Route::get('/changepass', [AuthController::class, 'changePassView'])->name('auth.changePassView'); 
+
+Route::get('/emailverified', [AuthController::class, 'emailverifiedView'])->name('auth.emailverifiedView'); 
+Route::post('/emailverified', [AuthController::class, 'emailverified'])->name('auth.emailverified'); 
+
 Route::post('/changepass', [AuthController::class, 'changePass'])->name('auth.changePass'); 
 
 Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout'); 
@@ -35,7 +39,8 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('auth.logout');
 Route::middleware(['authencation'])->group(function () { 
     Route::get('/', [UserController::class, 'HomePage'])->name('user.HomePage');
     Route::post('/createproject', [ProjectController::class, 'createProject'])->name('project.createProject');
-    Route::get('/createproject', [ProjectController::class, 'createProjecView'])->name('project.createProjectView');
+    Route::get('/createproject', [ProjectController::class, 'createProjectView'])->name('project.createProjectView');
     Route::get('/projectdetail', [ProjectController::class, 'ProjectDetailView'])->name('project.ProjectDetailView');
-    Route::get('/editproject', [ProjectController::class, 'updateProject'])->name('project.updateProject');
+    Route::get('/editproject', [ProjectController::class, 'updateProjectView'])->name('project.updateProjectView');
+    Route::post('/update', [ProjectController::class, 'updateProject'])->name('project.updateProject');
 });

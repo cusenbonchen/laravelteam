@@ -33,7 +33,13 @@ class AuthController extends Controller
             $userExist = User::where('username', $username)->first();  
             if ($userExist) {  
                 if(Hash::check($request->password, $userExist->password)){
+
+                    if($userExist->email_verified != 1){
+                        return view('login')->with('message', 'Vui lòng kích hoạt mail trước khi sử dụng tài khoản!!!');
+                    }
+
                     Session::put('user', $userExist); 
+
                     return redirect('/');
                 }else{
                     return view('login')->with('message', $passWordNotMatch);
@@ -54,24 +60,21 @@ class AuthController extends Controller
             $email = User::firstWhere('email', $req->email);  
             if(!$email) 
                 return view('forgotPassword')->with('message', $emailNotFound); 
-            $radom = $email->lastname;
-            $token = random_int(1000000000, 9999999999);
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            $token = substr(str_shuffle($characters), 0, 30);
             $result = $email->update([
                 "token_email" => $token, 
             ]);  
-            $mailData = [  
-                'body' => $token,
-                'id'=> $email->id,
-                'lastname' => $email->lastname
-            ];
-            $dataMail = [
-                'text' => $sendMailSuccess,
-                'email' => $req->email
-            ];
+           
             if($result){   
+                $mailData = [  
+                    'body' => $token,
+                    'id'=> $email->id,
+                    'lastname' => $email->lastname
+                ];      
                 $mail = new ForgetPassMail($mailData);  
                 Mail::to($req->email)->send($mail); 
-                return view('ChangePass')->with('message', $dataMail);
+                return view('forgotPassword')->with('message', 'Gửi thư thành công!!! Vui lòng kiểm tra hộp thư hoặc spam.');
             }
             
         
@@ -89,17 +92,42 @@ class AuthController extends Controller
     public function ChangePassView(){ 
         return view("ChangePass"); 
     }
-    public function ChangePass(Request $request){ 
-        Lang::setLocale($request->language); 
-        $email = User::firstWhere('email', $request->email);
+    public function emailverifiedView(){ 
+        return view("emailverified"); 
+    }
+    public function emailverified(Request $request){ 
+        $user = User::firstWhere('id', $request->id);
         $wrongToken = Lang::get('auth.wrongToken'); 
         $successGetNewPass = Lang::get('auth.successGetNewPass');
         $rePasswordNotMatch = Lang::get('auth.rePasswordNotMatch'); 
-        if($email){ 
-            if($email->token_email === $request->token_email){
+        if($user){ 
+            if(hash_equals($user->token_email, $request->token_email)){
+                
+                $result = $user->update([
+                    "token_email" => '',
+                    "email_verified" => true
+                ]); 
+                if($result){   
+                    return view("login")->with('message', 'Xác nhận mail thành công!!!'); 
+                } 
+            }
+        }
+
+
+       
+    }
+    public function ChangePass(Request $request){ 
+        Lang::setLocale($request->language); 
+        $user = User::firstWhere('id', $request->id);
+        $wrongToken = Lang::get('auth.wrongToken'); 
+        $successGetNewPass = Lang::get('auth.successGetNewPass');
+        $rePasswordNotMatch = Lang::get('auth.rePasswordNotMatch'); 
+        if($user){ 
+            if(hash_equals($user->token_email, $request->token_email)){
+                
                 if($request->password !== $request->rePassword)
-                    return view('Register')->with('message', $rePasswordNotMatch);
-                $result = $email->update([
+                    return view('ChangePass')->with('message', $rePasswordNotMatch);
+                $result = $user->update([
                     "token_email" => '',
                     "password" => Hash::make($request->password)
                 ]); 
@@ -113,7 +141,7 @@ class AuthController extends Controller
                     'text' => $wrongToken,
                     'email' => $request->email
                 ];
-                return view('ChangePass')->with('message', $dataMail);
+                return view('login')->with('message', 'Lấy lại mật khẩu thành công !!!');
             }
         }
     }
@@ -128,6 +156,10 @@ class AuthController extends Controller
             $rePasswordNotMatch = Lang::get('auth.rePasswordNotMatch');
             $username = User::firstWhere('username', $request->username); 
             $email = User::firstWhere('email', $request->email); 
+
+            $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            $token = substr(str_shuffle($characters), 0, 30); 
+
             if($email)
                 return view('Register')->with('message', $emaiExit);
             if($username)
@@ -140,9 +172,23 @@ class AuthController extends Controller
                 'first_name' => $request -> first_name,
                 'last_name' => $request -> last_name,
                 'password' => Hash::make($request->password),
+                "token_email" => $token, 
             ];
-            User::create($data);
-            return view('login')->with('message', $registerSuccess);
+            $result = User::create($data);
+           
+            if($result){   
+                $mailData = [  
+                    'body' => $token,
+                    'id'=> $result->id,
+                    'lastname' => $result->lastname
+                ];
+     
+                $mail = new RegisterMail($mailData);  
+                Mail::to($request->email)->send($mail); 
+                return view('login')->with('message', 'Tài khoản được tạo thành công !!! Vui lòng kich hoạt mail để tiếp tục sử dụng');
+            }
+
+            
         } catch (\Throwable $e) {
             return view('Register')->with('message', $e);
         }

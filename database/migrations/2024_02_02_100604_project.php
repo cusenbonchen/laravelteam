@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+use Carbon\Carbon;
 class Project extends Migration
 {
     /**
@@ -20,6 +20,7 @@ class Project extends Migration
             $table->string('client');
             $table->bigInteger('level')->default(3); 
             $table->bigInteger('type')->default(3); 
+            $table->date('deadline')->default(Carbon::now()->toDateString());
             $table->bigInteger('process')->default(3); 
             $table->longText('content')->default(''); 
             $table->text('assign');

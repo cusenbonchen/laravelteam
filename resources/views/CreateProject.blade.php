@@ -5,22 +5,32 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 <form action="{{ route('project.createProject') }}" method="post">
 @csrf
-    <div class="mb-3">
-      <label class="form-label" data-language="code"> </label>
-      <input type="text" name="code" class="form-control" autocomplete="off" required data-language="codePlaceholder">
+    <div class="row">
+      <div class="col-md-6">
+        <label class="form-label" data-language="code"> </label>
+        <input type="text" name="code" class="form-control" autocomplete="off" required data-language="codePlaceholder">
+      </div>
+      <div class="col-md-6">
+      <label class="form-label" data-language="projectName"></label>
+      <input name="project_name" class="form-control" autocomplete="off" required data-language="projectNamePlaceholder">
+      </div> 
     </div>
-    <div class="mb-3">
-    <label class="form-label" data-language="projectName"></label>
-    <input name="project_name" class="form-control" autocomplete="off" required data-language="projectNamePlaceholder">
-  </div> 
-    <div class="mb-3">
-      <label class="form-label" data-language="client"> </label>
-      <input name="client" class="form-control" autocomplete="off" required data-language="clientPlaceholder">
+    <br>
+    <div class="row">
+      <div class="col-md-4">
+        <label class="form-label" data-language="client"> </label>
+        <input name="client" class="form-control" autocomplete="off" required data-language="clientPlaceholder">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label" data-language="level"></label>
+        <input name="level" class="form-control" type="number" autocomplete="off" min="1" max="5" required data-language="levelPlaceholder">
+      </div>
+      <div class="col-md-4">
+        <label class="form-label">Dealine</label>
+        <input name="deadline" class="form-control" type="date" autocomplete="off" required>
+      </div>
     </div>
-    <div class="mb-3">
-      <label class="form-label" data-language="level"></label>
-      <input name="level" class="form-control" type="number" autocomplete="off" required data-language="levelPlaceholder">
-    </div>
+    <br>
     <div class="mb-3">
       <label class="form-label" data-language="assignName"></label>
       <select id="assignSelect" style="width: 100%;" multiple="multiple">

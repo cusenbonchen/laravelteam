@@ -27,7 +27,7 @@ class CreateUsersTable extends Migration
             $table->string('phone_number')->nullable(); 
             $table->text('projects')->nullable();
             $table->bigInteger('permisstion')->default(3);
-            $table->boolean('status')->default(true);
+            $table->boolean('status')->default(false);
             $table->boolean('email_verified')->default(false); 
             $table->string('token_email')->nullable();
             $table->string('remember_token')->nullable();

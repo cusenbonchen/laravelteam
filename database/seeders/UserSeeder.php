@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('admin'), 
             'first_name' => 'Đạt Văn',
             'last_name' => 'Tây',
-            'status'=> 1, 
+            'status'=> true, 
             'projects' => json_encode($faker->unique()->randomElements(range(1, 20), 10)),
             'email'=> 'htmlcoder93@gmail.com', 
         ]);  
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('123'), 
                 'first_name' => 'Bé',
                 'last_name' => 'Đạt'.$i,
-                'status'=> 1, 
+                'status'=> true, 
                 'projects' => json_encode($faker->unique()->randomElements(range(1, 20), 10)),
                 'email'=> 'htmlcoder'.$i.'@gmail.com', 
             ]);  

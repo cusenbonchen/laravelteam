@@ -8,6 +8,20 @@
       <ul id="searchBox"></ul>
     </div> 
   </div>
+  @if (session('message'))
+      <div class="alert alert-success" id="success-message" style="position: absolute; right: 20px; bottom: 20px; min-width: 300px;">
+          {{ session('message') }}
+      </div>
+
+      <script>
+          setTimeout(function() {
+              const message = document.getElementById('success-message');
+              if (message) {
+                  message.style.display = 'none';
+              }
+          }, 3000); 
+      </script>
+  @endif
   <div class="process">
       <div class="column">
           <h3 data-language="assign"> </h3>
@@ -43,7 +57,17 @@
       </div>
     </div>
 </div>
-  
+@if(isset($message))
+<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      {{$message}}
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+  @endif
   
   <script>
     
@@ -98,10 +122,9 @@
             }),
         })
         .then(response => response.json())
-        .then(data => { 
+        .then(data => {  
           showToast(data.message, 3000);
           renderTaskDragAndDrop(columnsData)
-          console.log(data)
         })
         .catch(error => console.error('Lỗi:', error)); 
       }
